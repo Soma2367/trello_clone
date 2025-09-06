@@ -1,7 +1,4 @@
 import { useState } from "react";
-import AddButton from "./components/AddButton";
-import Modal from "./components/Modal";
-import CardList from "./components/CardList";
 import Boards from "./components/Boards";
 
 export default function App() {
