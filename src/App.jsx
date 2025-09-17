@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Boards from "./components/Boards";
+import Boards from "./components/boards/Boards";
 
 export default function App() {
   const [cards, setCards] = useState([]);
