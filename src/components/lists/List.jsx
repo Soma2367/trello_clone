@@ -5,7 +5,6 @@ function List({ list }) {
   const [cards, setCards] = useState([]);
   const [newCardTitle, setNewCardTitle] = useState("");
   const [addCard, setAddCard] = useState(false);
-  const [showCardModal, setShowCardModal] = useState(false);
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -18,6 +17,22 @@ function List({ list }) {
     }
     fetchCards();
   }, [list.id]);
+
+  const handleCreateCard = async () => {
+    if(!newCardTitle.trim()) return;
+    
+    const { data, error } = await supabase
+        .from("cards")
+        .insert([{card_title: newCardTitle, content, date, list_id: list.id}])
+        .select()
+        .single();
+
+        if(!error) {
+          setCards((prev) => [...prev, data]);
+          setNewCardTitle("");
+          setAddCard(false);
+        }
+  }
 
   return (
     <div className="flex gap-4 overflow-x-auto">

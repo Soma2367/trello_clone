@@ -51,8 +51,8 @@ function BoardView({ board, onBack }) {
           <List key={list.id} list={list}/>
         ))}
 
+       {addingList ? (
         <div className="min-w-[320px] bg-gray-100 rounded-lg p-3">
-          {addingList ? (
             <div className="flex flex-col gap-2">
               <input 
                 type="text" 
@@ -77,15 +77,22 @@ function BoardView({ board, onBack }) {
                 </button>
               </div>
             </div>
-          ) : (
-            <button
-             onClick={() => setAddingList(true)}
-             className="w-full text-gray-600 hover:text-gray-800"
-            >
-             ＋もう一つのリストを追加する
-            </button>
-          )}
-        </div>
+          </div>
+        ) : (
+          <button
+          onClick={() => setAddingList(true)}
+          className="
+            min-w-[320px] h-12
+          bg-white/70 hover:bg-white
+          text-gray-700 hover:text-gray-900
+            rounded-md shadow-sm
+            flex items-center justify-center
+            transition-colors
+          "
+        >
+          ＋ もう一つのリストを追加する
+        </button>
+        )}
       </div>
     </div>
   );
