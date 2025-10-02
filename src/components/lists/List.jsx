@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../supabaseClient";
+import Card from "../cards/Card";
 
 function List({ list }) {
   const [cards, setCards] = useState([]);
@@ -23,7 +24,7 @@ function List({ list }) {
     
     const { data, error } = await supabase
         .from("cards")
-        .insert([{card_title: newCardTitle, content, date, list_id: list.id}])
+        .insert([{card_title: newCardTitle,list_id: list.id}])
         .select()
         .single();
 
@@ -34,10 +35,21 @@ function List({ list }) {
         }
   }
 
+  // const Card = async () => {
+
+  // }
+
   return (
-    <div className="flex gap-4 overflow-x-auto">
+    <div className="flex gap-4 overflow-x-auto items-start">
       <div className="min-w-[320px] bg-gray-50 rounded-lg p-3">
         <div className="text-center text-xl font-bold mb-2">{list.title}</div>
+
+        <div >
+              {cards.map((card) => (
+                <Card key={card.id} card={card} />
+              ))}
+        </div>
+         
         <div className="min-w-[280px] bg-white rounded-xl shadow-md p-4">
            {addCard ? (
             <div className="flex flex-col gap-2">
@@ -54,7 +66,7 @@ function List({ list }) {
               <div className="flex gap-2">
                 <button
                  className="px-3 py-1 bg-blue-500 text-white rounded"
-                 onClick={() => {}}
+                 onClick={handleCreateCard}
                 >
                   保存
                 </button>
