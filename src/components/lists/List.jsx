@@ -1,23 +1,28 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../supabaseClient";
 import Card from "../cards/Card";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { useDroppable } from "@dnd-kit/core";
 
-function List({ list }) {
-  const [cards, setCards] = useState([]);
+function List({ list, cards, setCards }) {
+  // const [cards, setCards] = useState([]);
   const [newCardTitle, setNewCardTitle] = useState("");
   const [addCard, setAddCard] = useState(false);
 
-  useEffect(() => {
-    const fetchCards = async () => {
-      const { data, error } = await supabase
-         .from("cards")
-         .select("*")
-         .eq("list_id", list.id)
-         .order("created_at", { ascending: true });
-       if(!error) setCards(data);
-    }
-    fetchCards();
-  }, [list.id]);
+  const { setNodeRef } = useDroppable({
+    id: list.id, 
+  });
+  // useEffect(() => {
+  //   const fetchCards = async () => {
+  //     const { data, error } = await supabase
+  //        .from("cards")
+  //        .select("*")
+  //        .eq("list_id", list.id)
+  //        .order("created_at", { ascending: true });
+  //      if(!error) setCards(data);
+  //   }
+  //   fetchCards();
+  // }, [list.id]);
 
   const handleCreateCard = async () => {
     if(!newCardTitle.trim()) return;
@@ -35,20 +40,28 @@ function List({ list }) {
         }
   }
 
-  // const Card = async () => {
-
-  // }
+  const listCards = cards.filter((card) => card.list_id === list.id)
 
   return (
-    <div className="flex gap-4 overflow-x-auto items-start">
-      <div className="min-w-[320px] bg-gray-50 rounded-lg p-3">
+    <div>
+      <div className="min-w-[320px] bg-gray-50 rounded-lg p-3 ">
         <div className="text-center text-xl font-bold mb-2">{list.title}</div>
 
-        <div >
-              {cards.map((card) => (
-                <Card key={card.id} card={card} />
-              ))}
-        </div>
+        <SortableContext
+          items={listCards}
+          strategy={verticalListSortingStrategy}
+        >
+          <div
+            ref={setNodeRef}
+            className="min-h-[100px]"
+          >
+            {
+              listCards.map((card) => (
+                <Card key={card.id} card={card}/>
+              ))
+            }
+          </div>
+        </SortableContext>
          
         <div className="min-w-[280px] bg-white rounded-xl shadow-md p-4">
            {addCard ? (
